@@ -1,10 +1,4 @@
-const initialGameBoard = [
-  [[null], [null], [null]],
-  [[null], [null], [null]],
-  [[null], [null], [null]],
-];
-
-export default function GameBoard({ onSquareClicked, turns }) {
+export default function GameBoard({ onSquareClicked, board }) {
   // function handleCellClick(rowIndex, colIndex) {
   //   setGameBoard((prevGameBoard) => {
   //     const newGameBoard = [...prevGameBoard.map((row) => [...row])];
@@ -14,22 +8,18 @@ export default function GameBoard({ onSquareClicked, turns }) {
 
   //   onSquareClicked();
   // }
-  let gameBoard = initialGameBoard;
-  for (const turn of turns) {
-    const { square, player } = turn;
-    const { row, col } = square;
-
-    gameBoard[row][col] = player;
-  }
 
   return (
     <ol id="game-board">
-      {gameBoard.map((row, rowIndex) => (
+      {board.map((row, rowIndex) => (
         <li key={rowIndex}>
           <ol>
             {row.map((col, colIndex) => (
               <li key={colIndex}>
-                <button onClick={() => onSquareClicked(rowIndex, colIndex)}>
+                <button
+                  onClick={() => onSquareClicked(rowIndex, colIndex)}
+                  disabled={col !== null}
+                >
                   {col}
                 </button>
               </li>
