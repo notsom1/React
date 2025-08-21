@@ -1,13 +1,25 @@
 import Input from "./Input";
 
-export default function FormField({ inputType, children }) {
+export default function FormField({
+  inputType,
+  children,
+  ref,
+  required,
+  defaultValue,
+}) {
   const labelStyle = "text-zinc-600 font-bold";
 
   return (
     <>
       <br></br>
       <label className={labelStyle}>{children}</label>
-      <Input inputType={inputType} className="mt-1"></Input>
+      <Input
+        required={required}
+        ref={ref}
+        inputType={inputType}
+        defaultValue={defaultValue}
+        className="mt-1"
+      ></Input>
     </>
   );
 }

@@ -3,9 +3,11 @@ export default function Button({
   textColor = "text-gray-400 hover:text-white",
   className,
   children,
+  onClick,
 }) {
   return (
     <button
+      onClick={onClick}
       className={`px-4 py-3 rounded-lg text-xl ${bgcolor} ${textColor} ${className}`}
     >
       {children}

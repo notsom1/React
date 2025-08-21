@@ -1,6 +1,9 @@
 import img from "../assets/no-projects.png";
-import Button from "./Button";
-export default function HomeView({ className }) {
+import Button from "../components/Button";
+export default function HomeView({ className, setView }) {
+  function handleClick() {
+    setView("CreateProject");
+  }
   return (
     <div className={`items-center ${className}`}>
       <img src={img} className="h-32 w-fit"></img>
@@ -10,7 +13,9 @@ export default function HomeView({ className }) {
       <h2 className="text-2xl text-gray-400 mt-8">
         Select a project or get started with a new one
       </h2>
-      <Button className="mt-14">Create new project</Button>
+      <Button onClick={handleClick} className="mt-14">
+        Create new project
+      </Button>
     </div>
   );
 }

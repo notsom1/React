@@ -3,9 +3,11 @@ export default function TextButton({
   className,
   textSize = "text-xl",
   children,
+  onClick,
 }) {
   return (
     <button
+      onClick={onClick}
       className={`px-4 py-3 rounded-lg ${textSize} ${textColor} ${className}`}
     >
       {children}
