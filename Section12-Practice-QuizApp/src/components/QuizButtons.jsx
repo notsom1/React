@@ -25,6 +25,7 @@ export default function QuizButtons({}) {
         return (
           <QuizButton
             key={i}
+            disabled={quizContext.pickedAnswer >= 0}
             buttonColor={
               quizContext.pickedAnswer === i ? pickedColor : notPickedColor
             }

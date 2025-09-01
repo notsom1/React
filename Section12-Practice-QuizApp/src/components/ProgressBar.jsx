@@ -11,6 +11,15 @@ export default function ProgressBar() {
   let timer = useRef();
   let changeQuestion = useRef();
 
+  function startTimer() {
+    clearInterval(timer.current);
+    console.log("the time is " + quizContext.initialTime);
+    setRemainingTime(quizContext.initialTime);
+    timer.current = setInterval(() => {
+      setRemainingTime((prev) => prev - 10);
+    }, 10);
+  }
+
   useEffect(() => {
     if (changeQuestion.current === true) {
       changeQuestion.current = false;
@@ -18,17 +27,15 @@ export default function ProgressBar() {
     }
   }, [changeQuestion.current]);
 
+  // useEffect(() => {
+  //   startTimer();
+  // }, []);
+
   useEffect(() => {
-    console.log("hi");
-    quizContext.startedTimer();
-    clearInterval(timer.current);
-    setRemainingTime(quizContext.initialTime);
-    timer.current = setInterval(() => {
-      setRemainingTime((prev) => prev - 10);
-    }, 10);
+    startTimer();
 
     return () => clearInterval(timer.current);
-  }, [quizContext.startTimer, quizContext.initialTime]);
+  }, [quizContext.startTimer]);
 
   if (remainingTime <= 0) {
     clearInterval(timer.current);

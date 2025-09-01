@@ -1,16 +1,27 @@
+import { useContext } from "react";
 import AnswerResult from "./AnswerResult";
+import { QuizContext } from "../Context/QuizContext";
+import questions from "../../questionsData";
 
 export default function AnswersResults() {
+  const quizContext = useContext(QuizContext);
+  console.log(quizContext.answersArray);
   return (
     <div className="mt-8">
-      <AnswerResult
-        number={1}
-        question={"Which of the following definitions best describes React.js?"}
-        answer={
-          "Enabling the use of state and other React features in functional components"
-        }
-        isCorrect={true}
-      ></AnswerResult>
+      {quizContext.answersArray.map((answer, i) => (
+        <AnswerResult
+          number={i + 1}
+          answer={answer === null ? "Skipped" : answer}
+          isCorrect={
+            answer === undefined ||
+            answer !== questions[i].answers[questions[i].correctAnswer]
+              ? false
+              : true
+          }
+          question={questions[i].text}
+          key={i}
+        ></AnswerResult>
+      ))}
     </div>
   );
 }

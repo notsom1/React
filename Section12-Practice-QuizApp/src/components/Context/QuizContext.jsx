@@ -7,7 +7,7 @@ export const QuizContext = createContext({
   currentQuestion: 0,
   isCorrect: null,
   pickedAnswer: null,
-  totalQuestion: 7,
+  totalQuestions: 7,
   score: {
     correct: 0,
     wrong: 0,
@@ -20,11 +20,12 @@ export const QuizContext = createContext({
   choices: [],
   startTimer: false,
   startedTimer: () => {},
+  answersArray: [],
 });
 
 export default function QuizContextProvider({ children }) {
   const questionTime = 5000;
-  const answeredTime = 2000;
+  const answeredTime = 500;
 
   const [isHomePage, setIsHomePage] = useState(true);
   const [quizStarted, setQuizStarted] = useState(false);
@@ -33,13 +34,25 @@ export default function QuizContextProvider({ children }) {
   const [pickedAnswer, setPickedAnswer] = useState();
   const [initialTime, setInitialTime] = useState(questionTime);
   const [startTimer, setStartTimer] = useState(true);
+  const [answerArray, setAnswerArray] = useState([]);
   const [score, setScore] = useState({
     correct: 0,
     wrong: 0,
     skipped: 0,
   });
 
+  function showResults() {
+    setIsHomePage(false);
+    setQuizStarted(false);
+    setCurrentQuestion(0);
+    setIsCorrect();
+    setPickedAnswer();
+    setInitialTime(questionTime);
+  }
+
+  // let initialTime = useRef();
   let randomAnswers = useRef();
+  // initialTime.current = questionTime;
 
   if (!randomAnswers.current) {
     generateChoices();
@@ -81,31 +94,59 @@ export default function QuizContextProvider({ children }) {
         };
       });
     }
+    setAnswerArray((prev) => {
+      const newArray = [...prev];
+      newArray.push(answer);
+      console.log(newArray);
+      return newArray;
+    });
     setPickedAnswer(i);
     setInitialTime(answeredTime);
+    // initialTime.current = answeredTime;
+
+    setStartTimer((prev) => !prev);
     console.log(score);
   }
 
   function nextQuestion() {
-    if (!pickedAnswer) {
+    if (pickedAnswer === undefined) {
+      console.log("i picked nothing: " + pickedAnswer);
       setScore((prev) => {
         return {
           ...prev,
           skipped: prev.skipped + 1,
         };
       });
+      setAnswerArray((prev) => {
+        const newArray = [...prev];
+        newArray.push(null);
+        console.log(newArray);
+        return newArray;
+      });
     }
+
     setPickedAnswer();
     setIsCorrect();
 
     if (currentQuestion === questions.length - 1) {
-      console.log("done");
+      showResults();
     } else {
       generateChoices(true);
       setCurrentQuestion((prevQuestion) => prevQuestion + 1);
     }
     setInitialTime(questionTime);
-    setStartTimer(true);
+    // initialTime.current = questionTime;
+    setStartTimer((prevStart) => !prevStart);
+  }
+
+  function startQuiz() {
+    setQuizStarted(true);
+    setAnswerArray([]);
+    setScore({
+      wrong: 0,
+      correct: 0,
+      skipped: 0,
+    });
   }
 
   const quizContext = {
@@ -118,11 +159,11 @@ export default function QuizContextProvider({ children }) {
     score: score,
     checkAnswer: checkAnswer,
     nextQuestion: nextQuestion,
-    startQuiz: () => setQuizStarted(true),
-    startedTimer: () => setStartTimer(false),
+    startQuiz: startQuiz,
     initialTime: initialTime,
     choices: randomAnswers.current,
     startTimer: startTimer,
+    answersArray: answerArray,
   };
 
   return <QuizContext value={quizContext}>{children}</QuizContext>;
